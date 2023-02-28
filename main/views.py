@@ -30,6 +30,7 @@ class Theaterwiselist(ListAPIView):
     queryset=Theater.objects.all() 
     permission_classes = [AllowAny]
 
+    
     def get(self,requset,id):
             data=Theater.objects.filter(theater_name__icontains=id)
             print(data)
@@ -53,7 +54,7 @@ class createTheaterscreen(CreateAPIView):
     serializer_class=Screenserializer
     def post(self,request):
         data=request.data
-        theater_id=request.data['Theater']
+        theater_id=request.data.get('Theater',None)
         screen=request.data['Screen']
         print(screen)
         show_movie_id=request.data['show_movie']
@@ -68,9 +69,6 @@ class createTheaterscreen(CreateAPIView):
             show_movie=show_movie,
             show_time=show_time,
             available_seat=available_seat,
-
-
-
             )
         serializer=Screenserializer(newscreen,many=False)
         return Response(serializer.data)
@@ -83,23 +81,19 @@ class ticketbook(CreateAPIView):
     permission_classes = [AllowAny]
 
     def post(self,request):
-        
-        seat_no=request.data['no']
-        theater=request.data['Theater']
-        theatre_id = Theater.objects.get(id=theater)
-        show=request.data['show']
-        show_id=Screen.objects.get(id=show)
-        arr=['a','b,c','d','e']
-        data=request.data
-        for each in arr:
-            print(each)
-            booking=Seat.objects.create(
-                no=each,
-                Theater=theatre_id,
-                show=show_id
-                
-            )
-            
+        seat_no=request.data.get("seat_no",None)
+        if seat_no:
+            theater=request.data.get('Theater',None)
+            theatre_id = Theater.objects.get(id=theater)
+            show=request.data.get('show',None)
+            screen=Screen.objects.get(id=show)
+            if show:
+                for each in seat_no:
+                    booking = Seat.objects.create(
+                        no=each,
+                        Theater=theatre_id,
+                        show=screen
+                    )
         return Response("successfuly created")
    
 
