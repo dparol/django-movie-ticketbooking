@@ -6,6 +6,7 @@ from django.db import models
 class Movies(models.Model):
     movie_name = models.CharField(max_length=200,null=True,blank=True)
     date_of_release=models.DateField(null=True,blank=True)
+    
     def __str__(self):
         return self.movie_name
 
@@ -14,9 +15,6 @@ class Theater(models.Model):
     NoOfScreen=models.IntegerField(null=True,blank=True)
     Movies=models.ForeignKey(Movies,on_delete=models.CASCADE,null=True,blank=True)
     
-
-
-
     def __str__(self):
         return self.theater_name
 
@@ -24,16 +22,10 @@ class Theater(models.Model):
 class Seat(models.Model):
     Theater=models.ForeignKey(Theater,on_delete=models.CASCADE,null=True,blank=True)
     no=models.CharField(max_length=5)
-    show=models.ForeignKey("Screen", on_delete=models.CASCADE)
+    show=models.ForeignKey("Screen", on_delete=models.CASCADE,blank=True)
     
-
     def __str__(self):
         return self.no
-
-
-
-   
-
 
 
 class Screen(models.Model):
