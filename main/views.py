@@ -78,28 +78,50 @@ class createTheaterscreen(CreateAPIView):
 
 
 class ticketbook(CreateAPIView):
+    # serializer_class=Seatserializer
+    # queryset=Seat.objects.all()
+    # permission_classes = [AllowAny]
+
+    # def post(self,request):
+        
+    #     seat_no=request.data['no']
+    #     theater=request.data['Theater']
+    #     theatre_id = Theater.objects.get(id=theater)
+    #     show=request.data['show']
+    #     show_id=Screen.objects.get(id=show)
+    #     arr=['a','b,c','d','e']
+    #     data=request.data
+    #     for each in arr:
+    #         print(each)
+    #         booking=Seat.objects.create(
+    #             no=each,
+    #             Theater=theatre_id,
+    #             show=show_id
+                
+    #         )
+            
+    #     return Response("successfuly created")
+
     serializer_class=Seatserializer
     queryset=Seat.objects.all()
     permission_classes = [AllowAny]
 
     def post(self,request):
-        
-        seat_no=request.data['no']
-        theater=request.data['Theater']
-        theatre_id = Theater.objects.get(id=theater)
-        show=request.data['show']
-        show_id=Screen.objects.get(id=show)
-        arr=['a','b,c','d','e']
-        data=request.data
-        for each in arr:
-            print(each)
-            booking=Seat.objects.create(
-                no=each,
-                Theater=theatre_id,
-                show=show_id
+        seat_no=request.data.get("no",None)
+        if seat_no:
+            theater=request.data.get('Theater',None)
+            theatre_id = Theater.objects.get(id=theater)
+            show=request.data.get('show',None)
+            screen=Screen.objects.get(id=show)
+            if show:
+                number=seat_no.split(',')
                 
-            )
-            
+                for each in number:
+                    booking = Seat.objects.create(
+                        no=each,
+                        Theater=theatre_id,
+                        show=screen
+                    )
         return Response("successfuly created")
    
 
